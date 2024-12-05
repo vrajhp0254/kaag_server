@@ -7,8 +7,14 @@ const productRoutes = require("./routes/productRoute");
 
 const app = express();
 
-// Middleware
-app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://your-production-site.com"], // Replace with your frontend origins
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  credentials: true, // Allow cookies if needed
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: "10mb" })); // Handle large images
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -21,6 +27,10 @@ mongoose
   .catch((err) => {
     console.error("MongoDB connection error:", err);
     process.exit(1); // Exit the app if the database connection fails
+  });
+
+  app.get("/", (req, res) => {
+    res.json({ message: "Hello World!" });
   });
 
 // Routes
